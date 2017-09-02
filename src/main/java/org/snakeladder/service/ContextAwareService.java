@@ -21,7 +21,7 @@ public class ContextAwareService {
     Scanner scanner = new Scanner(System.in);
 
 
-    public void initiatePlayBoard() {
+    public void initiatePlayBoard() throws Exception{
 
         int boardSize = scanner.nextInt();
         contextAware.buildBoard(boardSize);

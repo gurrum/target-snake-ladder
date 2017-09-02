@@ -27,8 +27,8 @@ public class SpringBootConsoleApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        playService.loadSnakeAndLadderBoard();
-        playService.startGame();
+        if(playService.loadSnakeAndLadderBoard())
+            playService.startGame();
 
         exit(0);
     }

@@ -9,9 +9,15 @@ public class PlayService {
     @Autowired
     ContextAwareService contextAwareService;
 
-    public void loadSnakeAndLadderBoard() {
+    public boolean loadSnakeAndLadderBoard() {
 
-        contextAwareService.initiatePlayBoard();
+        try{
+            contextAwareService.initiatePlayBoard();
+            return true;
+        }catch(Exception ex){
+            System.out.println("Data entry error " + ex.getMessage());
+            return false;
+        }
 
     }
 

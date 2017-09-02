@@ -1,6 +1,9 @@
 package org.snakeladder.domain;
 
+import org.snakeladder.constants.ActionType;
+import org.snakeladder.domain.strategy.Ladder;
 import org.snakeladder.domain.strategy.MoveStrategy;
+import org.snakeladder.domain.strategy.Snake;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -53,17 +56,19 @@ public class ContextAware {
     public ContextAware play(int dice) {
 
         Player currentPlayer = players[currentPlayerNo];
+
+        applyMagic(currentPlayer);
         currentPlayer.setEnergyLevel(currentPlayer.getEnergyLevel() - 1);
 
         if (currentPlayer.getEnergyLevel() <= 0) {
             currentPlayer.getPath().push(new Integer(1));
             this.currentPlayerNo = this.currentPlayerNo + 1 > players.length + 1 ? 1 : this.currentPlayerNo + 1;
+
             return this;
 
         }
 
         currentPlayer.setNormalPosition(currentPlayer.getPath().peek() + dice);
-
 
         MoveStrategy moveStrategy = moveStrategies.get(currentPlayer.getNormalPosition());
 
@@ -71,6 +76,7 @@ public class ContextAware {
         if (moveStrategy == null) {
 
             currentPlayer.getPath().push(new Integer(currentPlayer.getNormalPosition()));
+            applyMagic(currentPlayer);
             this.currentPlayerNo = this.currentPlayerNo + 1 > players.length + 1 ? 1 : this.currentPlayerNo + 1;
             return this;
         }
@@ -84,10 +90,45 @@ public class ContextAware {
             return this;
         }
 
+        applyMagic(currentPlayer);
         this.currentPlayerNo = this.currentPlayerNo + 1 >= players.length + 1 ? 1 : this.currentPlayerNo + 1;
 
         return this;
 
+    }
+
+    private void applyMagic(Player currentPlayer) {
+        if(currentPlayer.isMagic()){
+            for(Map.Entry<Integer,MoveStrategy> moveStrategyEntry:moveStrategies.entrySet()){
+
+                if(moveStrategyEntry.getValue().getActionType().equals(ActionType.S)){
+
+                    Snake snake = (Snake)moveStrategyEntry.getValue();
+                    swap(snake);
+
+
+
+                }
+
+                if(moveStrategyEntry.getValue().getActionType().equals(ActionType.L)){
+                    Ladder ladder = (Ladder)moveStrategyEntry.getValue();
+                    swap(ladder);
+                }
+
+            }
+        }
+    }
+
+    private void swap(Ladder ladder) {
+        int temp = ladder.getElevatePosition();
+        ladder.setElevatePosition(ladder.getOrigPosition());
+        ladder.setOrigPosition(temp);
+    }
+
+    private void swap(Snake snake) {
+        int temp = snake.getDropPosition();
+        snake.setDropPosition(snake.getOrigPosition());
+        snake.setOrigPosition(temp);
     }
 
     public boolean isGameOver() {
@@ -105,4 +146,9 @@ public class ContextAware {
     public int getBoardSize() {
         return boardSize;
     }
+
+    public Map<Integer, MoveStrategy> getMoveStrategies() {
+        return moveStrategies;
+    }
+
 }
