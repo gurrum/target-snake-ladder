@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class Trampoline extends MoveStrategy {
 
+
     @Autowired
     ContextAware contextAware;
 
@@ -28,5 +29,9 @@ public class Trampoline extends MoveStrategy {
             return true;
         }
         return false;
+    }
+
+    public void setContextAware(ContextAware contextAware) {
+        this.contextAware = contextAware;
     }
 }

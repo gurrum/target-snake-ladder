@@ -32,5 +32,9 @@ public class Elevator extends MoveStrategy {
         return false;
     }
 
+    public void setContextAware(ContextAware contextAware) {
+        this.contextAware = contextAware;
+    }
+
 
 }
