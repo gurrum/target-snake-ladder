@@ -24,6 +24,11 @@ public class ContextAwareService {
     public void initiatePlayBoard() throws Exception{
 
         int boardSize = scanner.nextInt();
+
+        double sqrt = Math.sqrt(boardSize);
+        int x = (int) sqrt;
+        if(Math.pow(sqrt,2) != Math.pow(x,2))
+            throw new Exception("Square board cannot be built");
         contextAware.buildBoard(boardSize);
 
         int noOfPlayers = scanner.nextInt();
